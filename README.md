@@ -1,5 +1,5 @@
-
 需要修改代理地址，可修改配置文件config.json
+
 ```
 {
   "common":{
@@ -9,7 +9,7 @@
     "gladosProxyHttps": "socks5://127.0.0.1:7890"
   },
   "admin": {
-    "chatId": ,
+    "chatId": 11111,
     "serverchanId": "",
     "serverchan3Id": ""
   }
@@ -19,8 +19,6 @@ common 包括telegrambot token以及一些代理ip和端口
 admin 可以将服务运行的报错信息同步推送给自己的账号
 
 ```
-
-
 
 构建镜像
 
@@ -44,17 +42,19 @@ sudo docker run -it --name=tgbot -v ./user_info.json:/app/user_info.json -v ./lo
 ```
 
 查看日志
+
 ```shell
 sudo docker logs tgbot
 ```
 
 重启
+
 ```shell
 sudo docker restart tgbot
 ```
 
-
 快速删除老的容器/镜像，并构建新的镜像
+
 ```shell
 sudo docker stop tgbot
 sudo docker rm tgbot
