@@ -1,0 +1,13 @@
+{
+  "common":{
+    "botToken": "xxxxx",
+    "botProxy": "http://127.0.0.1:7890",
+    "gladosProxyHttp": "socks5://127.0.0.1:7890",
+    "gladosProxyHttps": "socks5://127.0.0.1:7890"
+  },
+  "admin": {
+    "chatId": 11111,
+    "serverchanId": "xxxxx",
+    "serverchan3Id": "xxxxx"
+  }
+}

@@ -1,0 +1,8 @@
+python-telegram-bot~=21.7
+python-telegram-bot[job-queue]~=21.7
+python-telegram-bot[socks]~=21.7
+dataclasses~=0.6
+schedule~=1.2.2
+requests~=2.32.3
+PySocks~=1.7.1
+serverchan-sdk==1.0.6
