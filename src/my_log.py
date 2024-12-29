@@ -52,10 +52,10 @@ def use_new_log():
     handler_list.clear()
 
     # 获取新日期的字符串表示
-    new_day = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')  # 这里只是为了模拟，实际上应该是下一天的日期
+    new_day = datetime.today().strftime('%Y-%m-%d')  # 这里只是为了模拟，实际上应该是下一天的日期
 
     # 创建一个新的FileHandler，指向新日期的日志文件
-    new_file_handler = logging.FileHandler(f'daily_log_{new_day}.log')
+    new_file_handler = logging.FileHandler(f'./logs/daily_log_{new_day}.log')
     new_file_handler.setFormatter(formatter)
 
     # 将新的FileHandler添加到日志记录器中
