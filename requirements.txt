@@ -6,3 +6,4 @@ schedule~=1.2.2
 requests~=2.32.3
 PySocks~=1.7.1
 serverchan-sdk==1.0.6
+pytz~=2024.2
