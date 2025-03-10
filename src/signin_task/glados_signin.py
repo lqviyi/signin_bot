@@ -128,7 +128,7 @@ class GladosSignin:
     def add_auto_task(self):
         job_queue = self.bot.application.job_queue
         job_queue.run_daily(self.glados_signin_task, self.signin_time)  # glados自动签到
-        # job_queue.run_once(self.glados_signin_task, 3)
+        job_queue.run_once(self.glados_signin_task, 3)      # 重启执行一次
 
     async def show_start_glados(self, update: Update, context: CallbackContext):
         user = self.bot.get_user_by_update(update)

@@ -210,7 +210,7 @@ class BaiduCloudSignin:
     def add_auto_task(self):
         job_queue = self.bot.application.job_queue
         job_queue.run_daily(self.baiducloud_signin_task, self.signin_time)  # baiducloud自动签到
-        # job_queue.run_once(self.baiducloud_signin_task, 3)
+        job_queue.run_once(self.baiducloud_signin_task, 3)
 
     async def show_start_baiducloud(self, update: Update, context: CallbackContext):
         user = self.bot.get_user_by_update(update)
