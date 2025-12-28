@@ -20,6 +20,9 @@ class CommandType(IntEnum):
     NewAliyundrive = 420
     DelAliyundrive = 421
 
+    NewBilibili = 430
+    DelBilibili = 431
+
     # 通知渠道
     Serverchan = 500
     Serverchan3 = 501

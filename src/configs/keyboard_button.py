@@ -28,6 +28,7 @@ keyboard_list = {
                     InlineKeyboardButton("Glados签到", callback_data="start_glados"),
                     InlineKeyboardButton("百度网盘签到", callback_data="start_baiducloud"),
                     # InlineKeyboardButton("阿里云盘签到", callback_data="start_aliyundrive"),
+                    InlineKeyboardButton("bilibili签到", callback_data="start_bilibili"),
                 ],
                 [
                     InlineKeyboardButton("close keyboard button", callback_data="close"),
@@ -100,6 +101,25 @@ keyboard_list = {
                     InlineKeyboardButton("会员信息", callback_data="get_baiducloud_info"),
                     InlineKeyboardButton("立即签到", callback_data="run_baiducloud_signin"),
                     InlineKeyboardButton("立即答题", callback_data="run_baiducloud_answer"),
+                ],
+                [
+                    InlineKeyboardButton("<< 返回任务菜单", callback_data="task")
+                ],
+            ]
+        )
+    },
+    'start_bilibili': {
+        'title': '请选择你要处理Bilibili任务的命令:',
+        'reply_markup': InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("当前账号", callback_data="my_bilibili"),
+                    InlineKeyboardButton("新建账号", callback_data="new_bilibili_signin"),
+                    InlineKeyboardButton("删除账号", callback_data="del_bilibili_signin"),
+                ],
+                [
+                    InlineKeyboardButton("积分信息", callback_data="get_bilibili_info"),
+                    InlineKeyboardButton("立即签到", callback_data="run_bilibili_signin"),
                 ],
                 [
                     InlineKeyboardButton("<< 返回任务菜单", callback_data="task")

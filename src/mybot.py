@@ -10,8 +10,9 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, \
 from src import utils, my_notice, admin_notice, my_log
 from src.configs import config, keyboard_button
 from src.configs.command_type import CommandType
-from src.signin_task import glados_signin, baiducloud_signin
+from src.signin_task import glados_signin, baiducloud_signin, bilibili_signin
 from src.signin_task.baiducloud_signin import BaiduCloudSignin
+from src.signin_task.bilibili_signin import BilibiliSignin
 from src.signin_task.glados_signin import GladosSignin
 from src.configs.user_info import UserInfo
 from src.my_notice import MyNotice
@@ -25,6 +26,7 @@ class MyBot:
     def __init__(self, token):
         self.glados: GladosSignin = None
         self.baiducloud: BaiduCloudSignin = None
+        self.bilibili: BilibiliSignin = None
         self.m_notice: MyNotice = None
         self.token = token
         self.proxy = common['botProxy']
@@ -88,6 +90,7 @@ class MyBot:
     def add_other_handler(self):
         self.glados = GladosSignin(self)
         self.baiducloud = BaiduCloudSignin(self)
+        self.bilibili = BilibiliSignin(self)
         self.m_notice = MyNotice(self)
 
     async def command_start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -169,6 +172,11 @@ class MyBot:
             await self.baiducloud.on_text(update, context)
             return
 
+        # 注册新Bilibili账号
+        if self.bilibili is not None and bilibili_signin.is_bilibili_command(command_state):
+            await self.bilibili.on_text(update, context)
+            return
+
         # 添加通知账号
         if self.m_notice is not None and my_notice.is_notice_command(command_state):
             await self.m_notice.on_text(update, context)
@@ -207,6 +215,8 @@ class MyBot:
             await self.glados.on_button(update, context, query.data)
         elif baiducloud_signin.is_baiducloud_button(query.data):
             await self.baiducloud.on_button(update, context, query.data)
+        elif bilibili_signin.is_bilibili_button(query.data):
+            await self.bilibili.on_button(update, context, query.data)
         else:
             await query.edit_message_text(text=f"Selected option: {query.data}")
             user.command_state = CommandType.Empty

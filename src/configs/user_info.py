@@ -11,6 +11,7 @@ class UserInfo:
     name: str = ""
     glados_cookie: str = ""
     baiducloud_cookie: str = ""
+    bilibili_cookie: str = ""
     serverchan_token: str = ""
     serverchan3_token: str = ""
     # is_valid: bool = True
@@ -46,6 +47,9 @@ class UserInfo:
 
     def has_baiducloud(self) -> bool:
         return self.baiducloud_cookie is not None and self.baiducloud_cookie != ""
+
+    def has_bilibili(self) -> bool:
+        return self.bilibili_cookie is not None and self.bilibili_cookie != ""
 
 
     def has_serverchan(self) -> bool:
