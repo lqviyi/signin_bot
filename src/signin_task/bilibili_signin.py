@@ -172,7 +172,7 @@ class BilibiliSignin:
         self.last_signin = ""
         self.notice_user = []  # 没有开通自动签到的提示
 
-        self.signin_time = datetime.time(2, 10, 0, 0, pytz.timezone('Asia/Shanghai'))
+        self.signin_time = datetime.time(2, 20, 0, 0, pytz.timezone('Asia/Shanghai'))
         self.add_handler()
         self.add_auto_task()
 
