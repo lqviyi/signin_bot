@@ -33,6 +33,14 @@ def get_header(cookie) -> Any:
     }
     return headers
 
+def get_cuid(cookie) -> str:
+    # 转为字典
+    cookie_dict = utils.parse_loose_cookie(cookie)
+    ret = cookie_dict.get('BAIDUCUID', "")
+    if ret == "":
+        ret = cookie_dict.get('BIDUPSID', "")
+    return ret
+
 def start_signin(cookie)-> list[Any]:
     url = 'https://pan.baidu.com/rest/2.0/membership/level?app_id=250528&web=5&method=signin'
     headers = get_header(cookie)
@@ -50,11 +58,43 @@ def start_signin(cookie)-> list[Any]:
         text = response.text
     return [success, text]
 
+def start_newsignin(cookie)-> list[Any]:
+    url = 'https://pan.baidu.com/coins/taskcenter/signin?task_id=3410916321758720&task_from=task_sys_daily&'
+    condition_dict = {
+        'cuid': get_cuid(cookie),
+    }
+    for key in condition_dict:
+        url += key + '=' + condition_dict[key] + '&'
+
+    headers = get_header(cookie)
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        success = True
+        text = response.text
+    else:
+        success = False
+        text = response.text
+    return [success, text]
+
 # 签到
 def signin(user: UserInfo = None) -> list[Any]:
     day = utils.get_today_str()
     try:
         [success, text] = start_signin(user.baiducloud_cookie)
+    except Exception as e:
+        success = False
+        text = str(e)
+    if success:
+        text = f"时间：{day} （UTC+8）\n结果：{text}"
+    else:
+        text = f"时间：{day} （UTC+8）\n结果：签到失败。\n原因：{text}"
+    return [success, text]
+
+# 签到
+def newsignin(user: UserInfo = None) -> list[Any]:
+    day = utils.get_today_str()
+    try:
+        [success, text] = start_newsignin(user.baiducloud_cookie)
     except Exception as e:
         success = False
         text = str(e)
@@ -147,6 +187,25 @@ async def task_baiducloud_signin(user: UserInfo, context: ContextTypes.DEFAULT_T
 
     await context.bot.send_message(chat_id=user.id, text="baiducloud 正在签到...")
     [success, text] = signin(user)
+    await context.bot.send_message(
+        chat_id=user.id,
+        text=text
+    )
+
+    logger.info(text)
+    return [success, text]
+
+async def task_baiducloud_newsignin(user: UserInfo, context: ContextTypes.DEFAULT_TYPE) -> list[Any]:
+    if user is None:
+        return [False, "账号不存在"]
+
+    if not user.has_baiducloud():
+        text = f"你当前没有账号\n"
+        await context.bot.send_message(chat_id=user.id, text=text)
+        return [False, text]
+
+    await context.bot.send_message(chat_id=user.id, text="baiducloud 正在新版签到...")
+    [success, text] = newsignin(user)
     await context.bot.send_message(
         chat_id=user.id,
         text=text
@@ -283,6 +342,16 @@ class BaiduCloudSignin:
             'log': text
         }
         await utils.send_log(user, message)
+
+        [success, text] = await task_baiducloud_newsignin(user, context)
+        self.last_signin += text
+        message = {
+            'title': "baiducloud新版签到-" + ("成功" if success else "失败"),
+            'tags': "baiducloud_signin",
+            'log': text
+        }
+        await utils.send_log(user, message)
+
         user.command_state = CommandType.Empty
 
     async def command_run_baiducloud_answer(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -369,8 +438,10 @@ class BaiduCloudSignin:
                 is_notice = False
                 if not user.has_run_task(CommandType.NewBaiducloud):
                     signin_success = False
+                    newsignin_success = False
                     answer_success = False
                     signin_text = "baiducloud自动签到任务没有运行中!"
+                    newsignin_text = ""
                     answer_text = ""
                     vip_info_text = ""
                     if user_id not in self.notice_user:
@@ -380,14 +451,22 @@ class BaiduCloudSignin:
                 else:
                     # 自动签到
                     [signin_success, signin_text] = await task_baiducloud_signin(user, context)
+                    [newsignin_success, newsignin_text] = await task_baiducloud_newsignin(user, context)
                     [answer_success, answer_text] = await task_baiducloud_answer(user, context)
                     vip_info_text = await task_baiducloud_user_info(user, context)
-                    self.last_signin = f"{signin_text}\n\n{answer_text}"
+                    self.last_signin = f"{signin_text}\n\n{newsignin_text}\n\n{answer_text}"
                     is_notice = True
 
                 if is_notice:
                     message = {
                         'title': "baiducloud签到-" + ("成功" if signin_success else "失败"),
+                        'tags': "baiducloud_signin",
+                        'log': signin_text
+                    }
+                    await utils.send_log(user, message)
+
+                    message = {
+                        'title': "baiducloud新版签到-" + ("成功" if newsignin_success else "失败"),
                         'tags': "baiducloud_signin",
                         'log': signin_text
                     }

@@ -9,7 +9,6 @@ import pytz
 import requests
 from telegram import Update
 from telegram.ext import ContextTypes, CallbackContext
-from http.cookies import SimpleCookie
 
 from src import utils
 from src.configs import keyboard_button
@@ -38,10 +37,8 @@ def get_header(cookie) -> Any:
     return headers
 
 def get_csrf(cookie) -> str:
-    ck = SimpleCookie()
-    ck.load(cookie)
     # 转为字典
-    cookie_dict = {key: morsel.value for key, morsel in ck.items()}
+    cookie_dict = utils.parse_loose_cookie(cookie)
     return cookie_dict.get('bili_jct', "")
 
 
