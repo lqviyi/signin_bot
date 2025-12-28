@@ -61,3 +61,11 @@ sudo docker rm tgbot
 sudo docker rmi telegram_bot:latest
 sudo docker build -t telegram_bot:latest .
 ```
+
+新修改发布流程：
+
+```shell
+1.更新代码
+2.快速删除老的容器/镜像，并构建新的镜像
+3.其他根据需要挂载
+```
