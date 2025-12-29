@@ -41,6 +41,24 @@ def get_cuid(cookie) -> str:
         ret = cookie_dict.get('BIDUPSID', "")
     return ret
 
+def start_tasklist(cookie)-> list[Any]:
+    url = 'https://pan.baidu.com/coins/taskcenter/tasklist?task_from=task_sys_beginner+task_sys_daily+task_sys_space+task_sys_ai+task_sys_function+task_sys_growth&'
+    condition_dict = {
+        'cuid': get_cuid(cookie),
+    }
+    for key in condition_dict:
+        url += key + '=' + condition_dict[key] + '&'
+
+    headers = get_header(cookie)
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        success = True
+        text = "tasklist请求成功"
+    else:
+        success = False
+        text = response.text
+    return [success, text]
+
 def start_signin(cookie)-> list[Any]:
     url = 'https://pan.baidu.com/rest/2.0/membership/level?app_id=250528&web=5&method=signin'
     headers = get_header(cookie)
@@ -60,6 +78,7 @@ def start_signin(cookie)-> list[Any]:
 
 def start_newsignin(cookie)-> list[Any]:
     url = 'https://pan.baidu.com/coins/taskcenter/signin?task_id=3410916321758720&task_from=task_sys_daily&'
+    # url = 'https://pan.baidu.com/api/taskscore/antisave?task_id=3410916321758720&task_from=task_sys_daily&'
     condition_dict = {
         'cuid': get_cuid(cookie),
     }
@@ -94,6 +113,7 @@ def signin(user: UserInfo = None) -> list[Any]:
 def newsignin(user: UserInfo = None) -> list[Any]:
     day = utils.get_today_str()
     try:
+        [success, text] = start_tasklist(user.baiducloud_cookie)
         [success, text] = start_newsignin(user.baiducloud_cookie)
     except Exception as e:
         success = False
