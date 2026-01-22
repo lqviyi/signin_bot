@@ -24,17 +24,17 @@ def start(cookie):
     # 创建一个session,作用会自动保存cookie
     session = requests.session()
     # 点签到之后的页
-    url = "https://glados.rocks/api/user/checkin"
-    url2 = "https://glados.rocks/api/user/status"
-    referer = 'https://glados.rocks/console/checkin'
+    url = "https://glados.cloud/api/user/checkin"
+    url2 = "https://glados.cloud/api/user/status"
+    referer = 'https://glados.cloud/console/checkin'
     # checkin = requests.post(url,headers={'cookie': cookie ,'referer': referer })
     # state =  requests.get(url2,headers={'cookie': cookie ,'referer': referer})
-    origin = "https://glados.rocks"
+    origin = "https://glados.cloud"
     useragent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
     # 请求负载
     payload = {
         # 'token': 'glados_network'
-        'token': 'glados.one'
+        'token': 'glados.cloud'
         # 'token': 'glados.network'
     }
     # referer 当浏览器向web服务器发送请求的时候，一般会带上Referer，告诉服务器我是从哪个页面链接过来的，服务器 籍此可以获得一些信息用于处理。
